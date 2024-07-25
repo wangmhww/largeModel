@@ -2,6 +2,7 @@ package com.wm;
 
 import org.springframework.ai.document.Document;
 import org.springframework.ai.reader.TextReader;
+import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,9 +32,16 @@ public class DocumentService {
         List<Document> documents = textReader.get();
         CustomerTextSplitter textSplitter = new CustomerTextSplitter();
         List<Document> list = textSplitter.apply(documents);
-
-//        vectorStore.add(list);
-
+        vectorStore.add(list);
         return list;
+    }
+
+
+    public List<Document> searchDocument(String question){
+        SearchRequest searchRequest = SearchRequest.query(question)
+                .withTopK(1)
+                .withSimilarityThreshold(0.9);
+        List<Document> documents = vectorStore.similaritySearch(searchRequest);
+        return documents;
     }
 }

@@ -15,8 +15,10 @@ import java.util.List;
 public class CustomerTextSplitter extends TextSplitter {
     @Override
     protected List<String> splitText(String text) {
-        List<String> result = new ArrayList<>();
+        return List.of(split(text));
+    }
 
-        return null;
+    private String[] split(String text) {
+        return text.split("\\s*\\R\\s*\\R\\s*");
     }
 }
