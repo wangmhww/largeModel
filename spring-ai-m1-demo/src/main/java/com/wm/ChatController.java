@@ -2,6 +2,7 @@ package com.wm;
 
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.QuestionAnswerAdvisor;
+import org.springframework.ai.chat.messages.SystemMessage;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.model.ChatResponse;
@@ -52,6 +53,15 @@ public class ChatController {
 
     @Autowired
     private VectorStore vectorStore;
+
+    @GetMapping("/chatImage")
+    public String generate() {
+        Prompt prompt = new Prompt(
+                List.of(new SystemMessage("解析图片链接，并告诉我这张图片里有什么?"),
+                        new UserMessage("https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg")),
+                OpenAiChatOptions.builder().withModel("gpt-4o").build());
+        return chatModel.call(prompt).getResult().getOutput().getContent();
+    }
 
 
     @GetMapping("/chat")
